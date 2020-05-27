@@ -1,13 +1,18 @@
 <?php
+session_start();
+include 'config.php';
 
-if(isset($_POST['delete']))
+if(isset($_GET['did']))
 {
-    $query="DELETE $title='$title',$desc='$desc' WHERE $id='$id'";
+
+    $id = $_GET['did'];
+    $query="DELETE FROM `notes` WHERE `notes`.`id` = '$id'";
     $result=mysqli_query($conn,$query);
     if($result)
     {
-        header('location:home.php');
+        header('location:index.php');
+        
     }
 }
-
+    
 ?>

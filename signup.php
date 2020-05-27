@@ -1,42 +1,36 @@
-<?php 
+<?php
 session_start();
 include 'config.php';
 
-if(isset($_POST['submit']))
-{
+if (isset($_POST['submit'])) {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    if($username!='' && $password!='')
-    {
-        $query = "SELECT * FROM `signup`";
-        $result = mysqli_query($conn,$query);
+    if ($username != '' && $password != '') {
+        $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
+        $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_row($result);
-        echo $row;
-        if($row>0)
-        {
-               
-        }
-        if($result)
-        {
-            header('location:index.php');
-        }
-        else{
-            header('location:signup.php');
-        }
+        if ($row > 0) {
+            $msg = "Please try different Username or Password";
+            echo $msg;
+        } else {
 
-        $query = "INSERT INTO `signup` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password');";
-        $result = mysqli_query($conn,$query);
-        if($result)
-        {
-            header('location:index.php');
-        }
-        else{
-            header('location:signup.php');
-        }
-    }   
+            if ($result) {
+                header('location:index.php');
+            } else {
+                header('location:signup.php');
+            }
 
-
+            $query = "INSERT INTO `signup` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password');";
+            $result = mysqli_query($conn, $query);
+            if ($result) {
+                $_SESSION['user'] = $username;
+                header('location:index.php');
+            } else {
+                header('location:signup.php');
+            }
+        }
+    }
 }
 
 ?>
@@ -72,7 +66,7 @@ if(isset($_POST['submit']))
 
 <div class="container text-center mt-5">
 
-<!-- Signup Form -->
+    <!-- Signup Form -->
     <form class="needs-validation" novalidate method="post" action="signup.php">
         <div class="form-row">
             <div class="col-md-12 mb-3">

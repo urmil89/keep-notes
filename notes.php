@@ -15,3 +15,8 @@ if(isset($_POST['save']))
         }
     }
 }
+
+if(isset($_POST['update']))
+{
+    header('location:edit.php');
+}

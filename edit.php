@@ -4,17 +4,18 @@
 
 $eid = $_GET['eid'];
 
-if(isset($_GET['']))
+if(isset($_GET['eid']))
+{
 
-
-if (isset($_POST['update'])) {
-    $query = "UPDATE notes SET $title='$title',$desc='$desc' WHERE $id='$eid'";
-    $result = mysqli_query($conn, $query);
-    if ($result) {
-        header('location:home.php');
+    if (isset($_POST['update'])) {
+        $query = "UPDATE notes SET $title='$title',$desc='$desc' WHERE $id='$eid'";
+        $result = mysqli_query($conn, $query);
+        if ($result) {
+            header('location:home.php');
+        }
     }
+    
 }
-
 ?>
 
 <?php include 'header.php'; ?>

@@ -13,7 +13,18 @@
             <label for="desc">Note Description</label>
             <textarea class="form-control" name="desc" id="desc" rows="3" required></textarea>
         </div>
-        <button type="submit" name="save" class="btn btn-primary">Add Note</button>
+    <?php 
+    if(isset($_SESSION['update']))
+    {
+        ?>
+    <button type="submit" name="update" class="btn btn-warning">Update Note</button>
+    <?php
+    }else{
+        ?>
+    <button type="submit" name="save" class="btn btn-primary">Add Note</button>
+        <?php
+    }
+    ?>
     </form>
 </div>
 
@@ -42,7 +53,7 @@
                    <td><?php echo $row['title'] ?></td>
                    <td><?php echo $row['description'] ?></td>
                    <td><?php echo $row['tstamp'] ?></td>
-                   <td><a href="edit.php?eid="<?php echo $sno;?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="delete.php?did="<?php echo $sno;?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
+                   <td><a href="edit.php?eid=<?php echo $row['id'];?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="delete.php?did=<?php echo $row['id'];?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
                 <?php
             }
             ?>
