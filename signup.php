@@ -31,7 +31,7 @@ if (isset($_POST['isignup'])) {
                 $_SESSION['user'] = $username;
                 header('location:index.php');
             } else {
-                header('location:signup.php');
+                header('location:index.php');
             }
         }
     }
@@ -45,7 +45,7 @@ if (isset($_POST['ilogin'])) {
         $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_row($result);
-        if ($row == 1) {
+        if ($row > 0) {
             $_SESSION['user'] = $username;
             header('location:index.php');
         } else {
