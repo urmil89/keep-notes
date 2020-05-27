@@ -1,10 +1,54 @@
 <?php include 'header.php'; ?>
 <?php require 'config.php'; ?>
+<?php
+$title = '';
+$disc = '';
+
+inotes();
+function inotes()
+{
+    global $title;
+    $title = $_POST['title'];
+    $disc = $_POST['desc'];
+    if (isset($_POST['save'])) {
+        if (!$title == '' || !$disc == '') {
+            $query = "INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`) VALUES (NULL, '$title', '$disc', current_timestamp());";
+            $result = mysqli_query($conn, $query);
+            if ($result) {
+                header('location:index.php');
+            }
+        }
+    }
+}
+
+function iupdate()
+{
+
+    $id = $_GET['eid'];
+
+    if (isset($_GET['eid'])) {
+        $id = $_GET['eid'];
+
+        $query = "SELECT * FROM `notes` WHERE id = '$id'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_array($result);
+        $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`='current_timestamp()' WHERE 1";
+        $result = mysqli_query($conn, $query);
+        if ($result) {
+            header('location:index.php');
+        }
+    }
+}
+
+
+?>
+
+
 
 <!-- Main logic -->
 <div class="container my-4">
     <h2>Add Your Note</h2>
-    <form action="notes.php" method="post">
+    <form action="index.php" method="post">
         <div class="form-group">
             <label for="title">Note title</label>
             <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
@@ -13,18 +57,17 @@
             <label for="desc">Note Description</label>
             <textarea class="form-control" name="desc" id="desc" rows="3" required></textarea>
         </div>
-    <?php 
-    if(isset($_SESSION['update']))
-    {
-        ?>
-    <button type="submit" name="update" class="btn btn-warning">Update Note</button>
-    <?php
-    }else{
-        ?>
-    <button type="submit" name="save" class="btn btn-primary">Add Note</button>
         <?php
-    }
-    ?>
+        if (isset($_SESSION['update'])) {
+        ?>
+            <button type="submit" name="update" class="btn btn-warning">Update Note</button>
+        <?php
+        } else {
+        ?>
+            <button type="submit" name="save" class="btn btn-primary">Add Note</button>
+        <?php
+        }
+        ?>
     </form>
 </div>
 
@@ -47,16 +90,16 @@
             $sno = 0;
             while ($row = mysqli_fetch_assoc($result)) {
                 $sno = $sno + 1;
-                ?>
+            ?>
                 <tr>
                     <th scope='row'><?php echo $sno; ?></th>
-                   <td><?php echo $row['title'] ?></td>
-                   <td><?php echo $row['description'] ?></td>
-                   <td><?php echo $row['tstamp'] ?></td>
-                   <td><a href="edit.php?eid=<?php echo $row['id'];?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="delete.php?did=<?php echo $row['id'];?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
+                    <td><?php echo $row['title'] ?></td>
+                    <td><?php echo $row['description'] ?></td>
+                    <td><?php echo $row['tstamp'] ?></td>
+                    <td><a href="edit.php?eid=<?php echo $row['id']; ?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="delete.php?did=<?php echo $row['id']; ?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
                 <?php
             }
-            ?>
+                ?>
         </tbody>
     </table>
 
