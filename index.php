@@ -3,14 +3,19 @@
 <?php
 $title = '';
 $disc = '';
-
+// calling functions
 inotes();
+idelete();
+
+
 function inotes()
 {
     global $title;
-    $title = $_POST['title'];
-    $disc = $_POST['desc'];
+    global $conn;
+    global $disc;
     if (isset($_POST['save'])) {
+        $title = $_POST['title'];
+        $disc = $_POST['description'];
         if (!$title == '' || !$disc == '') {
             $query = "INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`) VALUES (NULL, '$title', '$disc', current_timestamp());";
             $result = mysqli_query($conn, $query);
@@ -24,21 +29,43 @@ function inotes()
 function iupdate()
 {
 
-    $id = $_GET['eid'];
-
+    global $id;
+    global $title;
+    global $conn;
+    global $disc;
     if (isset($_GET['eid'])) {
         $id = $_GET['eid'];
 
         $query = "SELECT * FROM `notes` WHERE id = '$id'";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_array($result);
+
         $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`='current_timestamp()' WHERE 1";
+        $result = mysqli_query($conn, $query);
+        if ($result) {
+            header('location:index.php');
+
+        }
+    }
+}
+
+
+function idelete()
+{
+
+    global $conn;
+    if (isset($_GET['did'])) {
+
+        $id = $_GET['did'];
+        $query = "DELETE FROM `notes` WHERE `notes`.`id` = '$id'";
         $result = mysqli_query($conn, $query);
         if ($result) {
             header('location:index.php');
         }
     }
 }
+
+
 
 
 ?>
@@ -55,7 +82,7 @@ function iupdate()
         </div>
         <div class="form-group">
             <label for="desc">Note Description</label>
-            <textarea class="form-control" name="desc" id="desc" rows="3" required></textarea>
+            <textarea class="form-control" name="description" id="desc" rows="3" required></textarea>
         </div>
         <?php
         if (isset($_SESSION['update'])) {
@@ -96,7 +123,7 @@ function iupdate()
                     <td><?php echo $row['title'] ?></td>
                     <td><?php echo $row['description'] ?></td>
                     <td><?php echo $row['tstamp'] ?></td>
-                    <td><a href="edit.php?eid=<?php echo $row['id']; ?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="delete.php?did=<?php echo $row['id']; ?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
+                    <td><a href="index.php?eid=<?php echo $row['id']; ?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="index.php?did=<?php echo $row['id']; ?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
                 <?php
             }
                 ?>
