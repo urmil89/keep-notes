@@ -5,6 +5,68 @@ require 'config.php';
 
 
 
+
+
+
+
+if (isset($_POST['isignup'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    if ($username != '' && $password != '') {
+        $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_row($result);
+        $msg = "try different Username or Password";
+        if ($row > 0) {
+?>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Please</strong> <?php echo $msg; ?>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+<?php
+        } else {
+
+            $query = "INSERT INTO `signup` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password');";
+            $result = mysqli_query($conn, $query);
+            if ($result) {
+                $_SESSION['user'] = $username;
+                header('location:index.php');
+            } else {
+                header('location:index.php');
+            }
+        }
+    }
+}
+
+if (isset($_POST['ilogin'])) {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    if ($username != '' && $password != '') {
+        $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
+        $result = mysqli_query($conn, $query);
+        $row = mysqli_fetch_row($result);
+        if ($row > 0) {
+            $_SESSION['user_id'] = $username;
+            header('location:index.php');
+        } else {
+            header('location:index.php');
+        }
+    }
+}
+
+
+
+
+?>
+
+
+<?php
+
 if (isset($_SESSION['user_id'])) {
 
 
@@ -69,11 +131,6 @@ if (isset($_SESSION['user_id'])) {
             }
         }
     }
-
-
-    inotes();
-    iupdate();
-    idelete();
 
 ?>
 
@@ -167,68 +224,9 @@ if (isset($_SESSION['user_id'])) {
 } else {
 
 
+?>
 
     // Signup Login Section 
-
-
-
-
-    if (isset($_POST['isignup'])) {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        if ($username != '' && $password != '') {
-            $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
-            $result = mysqli_query($conn, $query);
-            $row = mysqli_fetch_row($result);
-            $msg = "try different Username or Password";
-            if ($row > 0) {
-    ?>
-                <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                    <strong>Please</strong> <?php echo $msg; ?>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-    <?php
-            } else {
-
-                $query = "INSERT INTO `signup` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password');";
-                $result = mysqli_query($conn, $query);
-                if ($result) {
-                    $_SESSION['user'] = $username;
-                    header('location:index.php');
-                } else {
-                    header('location:index.php');
-                }
-            }
-        }
-    }
-
-    if (isset($_POST['ilogin'])) {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
-
-        if ($username != '' && $password != '') {
-            $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
-            $result = mysqli_query($conn, $query);
-            $row = mysqli_fetch_row($result);
-            if ($row > 0) {
-                $_SESSION['user_id'] = $username;
-                header('location:index.php');
-            } else {
-                header('location:index.php');
-            }
-        }
-    }
-
-
-
-
-    ?>
-
-
 
     <div class="container text-center mt-5">
         <div class="row">
