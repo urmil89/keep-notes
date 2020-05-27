@@ -62,22 +62,8 @@ function iupdate()
     }
 }
 
-
-if (isset($_GET['eid'])) {
-
-    $id = $_GET['eid'];
-    $query = "SELECT * FROM `notes` WHERE id = '$id'";
-    $result = mysqli_query($conn, $query);
-    $row = mysqli_fetch_array($result);
-    $_SESSION['update']=true;
-}
-
-
 ?>
 
-
-
-<!-- Main logic -->
 <div class="container my-4">
     <h2>Add Your Note</h2>
     <form action="index.php" method="post">
@@ -89,21 +75,46 @@ if (isset($_GET['eid'])) {
             <label for="desc">Note Description</label>
             <textarea class="form-control" name="description" id="desc" rows="3" required><?php echo $row['description']; ?></textarea>
         </div>
-        <?php
-        if (isset($_SESSION['update'])) {
-        ?>
-            <button type="submit" name="update" class="btn btn-warning">Update Note</button>
-        <?php
-        } else {
-        ?>
-            <button type="submit" name="save" class="btn btn-primary">Add Note</button>
-        <?php
-        }
-        ?>
+        <button type="submit" name="save" class="btn btn-primary">Add Note</button>
     </form>
 </div>
 
-<div class="container my-4">
+<?php
+
+if (isset($_GET['eid'])) {
+
+    $id = $_GET['eid'];
+    $query = "SELECT * FROM `notes` WHERE id = '$id'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_array($result);
+    $_SESSION['update'] = true;
+?>
+    <div class="container my-4">
+        <h2>Add Your Note</h2>
+        <form action="index.php" method="post">
+            <div class="form-group">
+                <label for="title">Note title</label>
+                <input type="text" value="<?php echo $row['title'] ?>" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
+            </div>
+            <div class="form-group">
+                <label for="desc">Note Description</label>
+                <textarea class="form-control" name="description" id="desc" rows="3" required><?php echo $row['description']; ?></textarea>
+            </div>
+            <?php
+            if (isset($_SESSION['update'])) {
+            ?>
+                <button type="submit" name="update" class="btn btn-warning">Update Note</button>
+            <?php
+            } else {
+            ?>
+                <button type="submit" name="save" class="btn btn-primary">Add Note</button>
+            <?php
+            }
+            ?>
+        </form>
+    </div <?php
+        }
+            ?> <div class="container my-4">
 
     <table class="table" id="myTable">
         <thead>
@@ -137,7 +148,7 @@ if (isset($_GET['eid'])) {
 
 
 
-</div>
-<hr>
+    </div>
+    <hr>
 
-<?php include 'footer.php'; ?>
+    <?php include 'footer.php'; ?>
