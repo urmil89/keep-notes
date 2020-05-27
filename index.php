@@ -1,10 +1,6 @@
 <?php include 'header.php'; ?>
 <?php require 'config.php'; ?>
 
-
-
-
-
 <!-- Main logic -->
 <div class="container my-4">
     <h2>Add Your Note</h2>
@@ -40,13 +36,14 @@
             $sno = 0;
             while ($row = mysqli_fetch_assoc($result)) {
                 $sno = $sno + 1;
-                echo "<tr>
-                    <th scope='row'>" . $sno . "</th>
-                    <td>" . $row['title'] . "</td>
-                    <td>" . $row['description'] . "</td>
-                    <td>" . $row['tstamp'] . "</td>
-                    <td><a href='edit.php?eid=".$sno."'><button type='button' class='btn btn-primary' data-toggle='modal' data-target='#exampleModal'>Edit</button></a> <a href='delete.php?did=".$sno."'><button type='button' class='btn btn-danger'>Delete</button></a></td>
-                    </tr>";
+                ?>
+                <tr>
+                    <th scope='row'><?php echo $sno; ?></th>
+                   <td><?php echo $row['title'] ?></td>
+                   <td><?php echo $row['description'] ?></td>
+                   <td><?php echo $row['tstamp'] ?></td>
+                   <td><a href="edit.php?eid="<?php echo $sno;?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="delete.php?did="<?php echo $sno;?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
+                <?php
             }
             ?>
         </tbody>

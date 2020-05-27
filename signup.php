@@ -12,7 +12,8 @@ if(isset($_POST['submit']))
         $query = "SELECT * FROM `signup`";
         $result = mysqli_query($conn,$query);
         $row = mysqli_fetch_row($result);
-        if($row>1)
+        echo $row;
+        if($row>0)
         {
                
         }
