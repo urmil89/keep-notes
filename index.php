@@ -3,22 +3,16 @@ session_start();
 include 'header.php'; 
 require 'config.php'; 
 
-if(isset($_SESSION['ilogin']))
+if(isset($_SESSION['user']))
 {
 
     
-    
-    
-    
+
     
     $title = '';
     $disc = '';
     $row = '';
     // calling functions
-    inotes();
-    idelete();
-    iupdate();
-    
     function inotes()
     {
         global $title;
@@ -74,6 +68,11 @@ if(isset($_SESSION['ilogin']))
             }
         }
     }
+    
+
+    inotes();
+    iupdate();
+    idelete();
     
     ?>
 
@@ -170,7 +169,13 @@ else{
 
 
 
-    
+
+
+
+
+
+
+
 }
 ?>
 <?php include 'footer.php'; ?>
