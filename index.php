@@ -3,10 +3,11 @@
 <?php
 $title = '';
 $disc = '';
+$row = '';
 // calling functions
 inotes();
 idelete();
-
+iupdate();
 
 function inotes()
 {
@@ -22,29 +23,6 @@ function inotes()
             if ($result) {
                 header('location:index.php');
             }
-        }
-    }
-}
-
-function iupdate()
-{
-
-    global $id;
-    global $title;
-    global $conn;
-    global $disc;
-    if (isset($_GET['eid'])) {
-        $id = $_GET['eid'];
-
-        $query = "SELECT * FROM `notes` WHERE id = '$id'";
-        $result = mysqli_query($conn, $query);
-        $row = mysqli_fetch_array($result);
-
-        $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`='current_timestamp()' WHERE 1";
-        $result = mysqli_query($conn, $query);
-        if ($result) {
-            header('location:index.php');
-
         }
     }
 }
@@ -66,6 +44,33 @@ function idelete()
 }
 
 
+function iupdate()
+{
+
+    global $id;
+    global $title;
+    global $conn;
+    global $disc;
+
+    if (isset($_POST['update'])) {
+
+        $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`='current_timestamp()' WHERE 1";
+        $result = mysqli_query($conn, $query);
+        if ($result) {
+            header('location:index.php');
+        }
+    }
+}
+
+
+if (isset($_GET['eid'])) {
+
+    $id = $_GET['eid'];
+    $query = "SELECT * FROM `notes` WHERE id = '$id'";
+    $result = mysqli_query($conn, $query);
+    $row = mysqli_fetch_array($result);
+    $_SESSION['update']=true;
+}
 
 
 ?>
@@ -78,11 +83,11 @@ function idelete()
     <form action="index.php" method="post">
         <div class="form-group">
             <label for="title">Note title</label>
-            <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
+            <input type="text" value="<?php echo $row['title'] ?>" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
         </div>
         <div class="form-group">
             <label for="desc">Note Description</label>
-            <textarea class="form-control" name="description" id="desc" rows="3" required></textarea>
+            <textarea class="form-control" name="description" id="desc" rows="3" required><?php echo $row['description']; ?></textarea>
         </div>
         <?php
         if (isset($_SESSION['update'])) {
