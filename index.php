@@ -23,10 +23,9 @@ if (!isset($_SESSION['user_id'])) {
         if ($username != '' && $password != '') {
             $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
             $result = mysqli_query($conn, $query);
-            $row = mysqli_fetch_row($result);
-            if ($row) {
-                $_SESSION['msg'] = "try different Username or Password";
-
+            $row = mysqli_num_rows($result);
+            if ($row > 0) {
+                $_SESSION['msg'] = " try different Username or Password";
 ?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>Please</strong><?php echo $_SESSION['msg']; ?>
@@ -315,7 +314,7 @@ if (!isset($_SESSION['user_id'])) {
             <tbody>
                 <?php
                 $user_id = $_SESSION["user_id"];
-                $qry = "SELECT * FROM `notes` WHERE `user_id` = '$user_id'";
+                $query = "SELECT * FROM `notes` WHERE `user_id` = '$user_id'";
                 $result = mysqli_query($conn, $query);
                 $sno = 0;
                 while ($row = mysqli_fetch_assoc($result)) {
