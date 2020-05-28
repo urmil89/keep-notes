@@ -1,6 +1,7 @@
 <?php
 include 'header.php';
 
+
 // db connection 
 $HOSTNAME = 'localhost';
 $USERNAME = 'root';
@@ -211,8 +212,8 @@ if (!isset($_SESSION['user_id'])) {
     //add note php
     if (isset($_POST['save'])) {
         $user_id = $_SESSION["user_id"];
-        $title = $_POST['title'];
-        $disc = $_POST['description'];
+        $title = mysqli_real_escape_string($conn,$_POST['title']);
+        $disc = mysqli_real_escape_string($conn,$_POST['description']);
         if (!$title == '' || !$disc == '') {
             $query = "INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`,`user_id`) VALUES (NULL, '$title', '$disc', current_timestamp(),'$user_id');";
             $result = mysqli_query($conn, $query);
@@ -239,8 +240,8 @@ if (!isset($_SESSION['user_id'])) {
 
         $user_id = $_SESSION["user_id"];
         $id = $_POST['id'];
-        $title = $_POST['title'];
-        $disc = $_POST['description'];
+        $title = mysqli_real_escape_string($conn,$_POST['title']);
+        $disc = mysqli_real_escape_string($conn,$_POST['description']);
         $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`=current_timestamp() WHERE id = '$id' AND `user_id` = $user_id";
         $result = mysqli_query($conn, $query);
         if ($result) {
