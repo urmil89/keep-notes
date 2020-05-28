@@ -201,8 +201,6 @@ if (!isset($_SESSION['user_id'])) {
     $query = "SELECT * FROM `notes` WHERE user_id=$user_id";
     $result = mysqli_query($conn, $query);
 
-
-
     if (isset($_GET["logout"])) {
         session_unset();
         session_destroy();
@@ -216,7 +214,7 @@ if (!isset($_SESSION['user_id'])) {
         $title = $_POST['title'];
         $disc = $_POST['description'];
         if (!$title == '' || !$disc == '') {
-            $query = "INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`,`user_id`) VALUES (NULL, '$title', '$disc', current_timestamp(),$user_id);";
+            $query = "INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`,`user_id`) VALUES (NULL, '$title', '$disc', current_timestamp(),'$user_id');";
             $result = mysqli_query($conn, $query);
             if ($result) {
                 header('location:index.php');
