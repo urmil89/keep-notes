@@ -36,9 +36,9 @@ if (!isset($_SESSION['user_id'])) {
                 $query = "INSERT INTO `signup` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password');";
                 $result = mysqli_query($conn, $query);
                 $id = mysqli_insert_id($conn);
-                if ($row = mysqli_fetch_assoc($result)) {
+                if ($result) {
                     $_SESSION['user_id'] = $id; 
-                    $_SESSION["user_name"] = $row["username"];
+                    $_SESSION["user_name"] = $username;
                     $_SESSION["msg"] = "Signup Successfully";
                     header('location:index.php');
                 } else {
