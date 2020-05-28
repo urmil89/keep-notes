@@ -1,5 +1,4 @@
 <?php
-session_start();
 
 // db connection 
 $HOSTNAME='localhost';
@@ -22,7 +21,6 @@ if (!isset($_SESSION['user_id'])) {
     if (isset($_POST['isignup'])) {
         $username = $_POST['username'];
         $password = $_POST['password'];
-
         if ($username != '' && $password != '') {
             $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
             $result = mysqli_query($conn, $query);
@@ -57,12 +55,14 @@ if (!isset($_SESSION['user_id'])) {
         if ($username != '' && $password != '') {
             $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
             $result = mysqli_query($conn, $query);
-            $id=mysqli_insert_id($conn);
-            if ($result) {
-                $_SESSION['user_id'] = $id;
-                header('location:index.php');
+            if ($row = mysqli_fetch_assoc($result)) {
+                $_SESSION["user_id"] = $row["id"];
+                $_SESSION["user_name"] = $row["user_name"];
+                $_SESSION["msg"] = "Login Successfully";
+                header("location:index.php");
             } else {
-                header('location:index.php');
+                $_SESSION["msg"] = "Invalid Username or Password";
+                header("location:index.php");
             }
         }
     }
@@ -198,6 +198,11 @@ if (!isset($_SESSION['user_id'])) {
 } else {
 
     // Main else part strat
+
+    $user_id = $_SESSION['user_id'];
+    $query="SELECT * FROM `notes` WHERE user_id=$user_id";
+    $result = mysqli_query($conn,$query);
+
 
 
     if (isset($_GET["logout"])) {

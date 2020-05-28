@@ -1,3 +1,7 @@
+<?php
+session_start();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -42,9 +46,15 @@
                     <a class="nav-link" href="#">contact</a>
                 </li>
             </ul>
-            <form class="form-inline my-2 my-lg-0">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            <?php
+					if (isset($_SESSION["user_id"])) {
+					?>
+						<li class="nav-item active">
+							<a class="nav-link" href="index.php">Welcome, <?php echo $_SESSION["user_name"]; ?></a>
+						</li>
+						<button class="btn btn-outline-success ml-3 pr-3 pl-3" type="submit" onclick="location.href='index.php?logout'">Logout</button>
+					<?php
+					}
+					?>
         </div>
     </nav>
