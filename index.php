@@ -12,8 +12,6 @@ if (!$conn) {
 }
 
 
-
-
 if (!isset($_SESSION['user_id'])) {
 
     // when user not set
@@ -259,7 +257,7 @@ if (!isset($_SESSION['user_id'])) {
     if (isset($_GET['eid'])) {
 
         $id = $_GET['eid'];
-        $query = "SELECT * FROM `notes` WHERE id = '$id'";
+        $query = "SELECT * FROM `notes` WHERE id = $id";
         $result = mysqli_query($conn, $query);
         $row = mysqli_fetch_array($result);
         $_SESSION['update'] = true;
@@ -281,8 +279,8 @@ if (!isset($_SESSION['user_id'])) {
             </form>
         </div>
     <?php
-    }
-    ?>
+    }else{
+       ?>
     <div class="container my-4">
         <h2>Add Your Note</h2>
         <form action="index.php" method="post">
@@ -297,10 +295,12 @@ if (!isset($_SESSION['user_id'])) {
             <button type="submit" name="save" class="btn btn-primary">Add Note</button>
         </form>
     </div>
-
+    <?php
+    }
+    ?>
 
     <div class="container my-4">
-
+        
         <table class="table" id="myTable">
             <thead>
                 <tr>
