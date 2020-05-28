@@ -46,6 +46,7 @@ session_start();
                     <a class="nav-link" href="#">contact</a>
                 </li>
             </ul>
+            
             <?php
 					if (isset($_SESSION["user_id"])) {
 					?>

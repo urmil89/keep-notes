@@ -1,13 +1,12 @@
 <?php
 
 // db connection 
-$HOSTNAME='localhost';
-$USERNAME='root';
-$PASSWORD='';
-$DATABASE='keep';
-$conn=mysqli_connect($HOSTNAME,$USERNAME,$PASSWORD,$DATABASE);
-if(!$conn)
-{
+$HOSTNAME = 'localhost';
+$USERNAME = 'root';
+$PASSWORD = '';
+$DATABASE = 'keep';
+$conn = mysqli_connect($HOSTNAME, $USERNAME, $PASSWORD, $DATABASE);
+if (!$conn) {
     echo mysqli_error($conn) or die("connection failed.");
 }
 
@@ -26,8 +25,8 @@ if (!isset($_SESSION['user_id'])) {
             $result = mysqli_query($conn, $query);
             $row = mysqli_fetch_row($result);
             if ($row) {
-                $msg = "try different Username or Password";
-                $_SESSION['msg'] = $msg;
+                $_SESSION['msg'] = "try different Username or Password";
+
 ?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
                     <strong>Please</strong><?php echo $_SESSION['msg']; ?>
@@ -39,9 +38,11 @@ if (!isset($_SESSION['user_id'])) {
             } else {
                 $query = "INSERT INTO `signup` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password');";
                 $result = mysqli_query($conn, $query);
-                $id=mysqli_insert_id($conn);
-                if ($result) {
-                    $_SESSION['user_id'] = $id;
+                $id = mysqli_insert_id($conn);
+                if ($row = mysqli_fetch_assoc($result)) {
+                    $_SESSION['user_id'] = $id; 
+                    $_SESSION["user_name"] = $row["username"];
+                    $_SESSION["msg"] = "Signup Successfully";
                     header('location:index.php');
                 } else {
                     header('location:index.php');
@@ -57,7 +58,7 @@ if (!isset($_SESSION['user_id'])) {
             $result = mysqli_query($conn, $query);
             if ($row = mysqli_fetch_assoc($result)) {
                 $_SESSION["user_id"] = $row["id"];
-                $_SESSION["user_name"] = $row["user_name"];
+                $_SESSION["user_name"] = $row["username"];
                 $_SESSION["msg"] = "Login Successfully";
                 header("location:index.php");
             } else {
@@ -200,8 +201,8 @@ if (!isset($_SESSION['user_id'])) {
     // Main else part strat
 
     $user_id = $_SESSION['user_id'];
-    $query="SELECT * FROM `notes` WHERE user_id=$user_id";
-    $result = mysqli_query($conn,$query);
+    $query = "SELECT * FROM `notes` WHERE user_id=$user_id";
+    $result = mysqli_query($conn, $query);
 
 
 
@@ -212,34 +213,40 @@ if (!isset($_SESSION['user_id'])) {
     }
 
 
-
+    //add note php
     if (isset($_POST['save'])) {
+        $user_id = $_SESSION["user_id"];
         $title = $_POST['title'];
         $disc = $_POST['description'];
         if (!$title == '' || !$disc == '') {
-            $query = "INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`) VALUES (NULL, '$title', '$disc', current_timestamp());";
+            $query = "INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`,`user_id`) VALUES (NULL, '$title', '$disc', current_timestamp(),$user_id);";
             $result = mysqli_query($conn, $query);
             if ($result) {
                 header('location:index.php');
             }
         }
     }
+
+    // delete note php
     if (isset($_GET['did'])) {
 
+        $user_id = $_SESSION["user_id"];
         $id = $_GET['did'];
-        $query = "DELETE FROM `notes` WHERE `notes`.`id` = '$id'";
+        $query = "DELETE FROM `notes` WHERE `id` = '$id' AND `user_id` = $user_id";
         $result = mysqli_query($conn, $query);
         if ($result) {
             header('location:index.php');
         }
     }
 
+    //update note php
     if (isset($_POST['update'])) {
 
+        $user_id = $_SESSION["user_id"];
         $id = $_POST['id'];
         $title = $_POST['title'];
         $disc = $_POST['description'];
-        $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`=current_timestamp() WHERE id = '$id'";
+        $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`=current_timestamp() WHERE id = '$id' AND `user_id` = $user_id";
         $result = mysqli_query($conn, $query);
         if ($result) {
             header('location:index.php');
@@ -258,6 +265,7 @@ if (!isset($_SESSION['user_id'])) {
         $row = mysqli_fetch_array($result);
         $_SESSION['update'] = true;
     ?>
+
         <div class="container my-4">
             <h2>Add Your Note</h2>
             <form action="index.php" method="post">
@@ -306,19 +314,20 @@ if (!isset($_SESSION['user_id'])) {
             </thead>
             <tbody>
                 <?php
-                $query = "SELECT * FROM `notes`";
+                $user_id = $_SESSION["user_id"];
+                $qry = "SELECT * FROM `notes` WHERE `user_id` = '$user_id'";
                 $result = mysqli_query($conn, $query);
                 $sno = 0;
                 while ($row = mysqli_fetch_assoc($result)) {
                     $sno = $sno + 1;
-                ?>
+                    ?>
                     <tr>
                         <th scope='row'><?php echo $sno; ?></th>
                         <td><?php echo $row['title'] ?></td>
                         <td><?php echo $row['description'] ?></td>
                         <td><?php echo $row['tstamp'] ?></td>
                         <td><a href="index.php?eid=<?php echo $row['id']; ?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="index.php?did=<?php echo $row['id']; ?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
-                    <?php
+                        <?php
                 }
                     ?>
             </tbody>
@@ -355,4 +364,3 @@ if (!isset($_SESSION['user_id'])) {
 
 
 <!-- Footer here -->
-
