@@ -3,84 +3,58 @@ session_start();
 include 'header.php';
 require 'config.php';
 
+if (!isset($_SESSION['user_id'])) {
 
+    if (isset($_POST['isignup'])) {
+        $username = $_POST['username'];
+        $password = $_POST['password'];
 
-
-
-
-
-if (isset($_POST['isignup'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-
-    if ($username != '' && $password != '') {
-        $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
-        $result = mysqli_query($conn, $query);
-        $row = mysqli_fetch_row($result);
-        $msg = "try different Username or Password";
-        if ($row > 0) {
-?>
-            <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                <strong>Please</strong> <?php echo $msg; ?>
-                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-
-<?php
-        } else {
-
-            $query = "INSERT INTO `signup` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password');";
+        if ($username != '' && $password != '') {
+            $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
             $result = mysqli_query($conn, $query);
-            if ($result) {
-                $_SESSION['user'] = $username;
-                header('location:index.php');
+            $row = mysqli_fetch_row($result);
+            if ($row > 0) {
+                $msg = "try different Username or Password";
+?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Please</strong><?php echo $msg; ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+        <?php
             } else {
-                header('location:index.php');
+                $query = "INSERT INTO `signup` (`id`, `username`, `password`) VALUES (NULL, '$username', '$password');";
+                $result = mysqli_query($conn, $query);
+                if ($result) {
+                    $_SESSION['user_id'] = $id;
+                    header('location:index.php');
+                } else {
+                    header('location:index.php');
+                }
             }
         }
-    }
-}
 
-if (isset($_POST['ilogin'])) {
-    $username = $_POST['username'];
-    $password = $_POST['password'];
+        if (isset($_POST['ilogin'])) {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
 
-    if ($username != '' && $password != '') {
-        $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
-        $result = mysqli_query($conn, $query);
-        $row = mysqli_fetch_row($result);
-        if ($row > 0) {
-            $_SESSION['user_id'] = $username;
-            header('location:index.php');
-        } else {
-            header('location:index.php');
+            if ($username != '' && $password != '') {
+                $query = "SELECT * FROM `signup` WHERE username ='$username' && password = '$password'";
+                $result = mysqli_query($conn, $query);
+
+                if ($result) {
+                    $_SESSION['user_id'] = $id;
+                    header('location:index.php');
+                } else {
+                    header('location:index.php');
+                }
+            }
         }
-    }
-}
+    } else {
 
+        // Main else part strat
 
-
-
-?>
-
-
-<?php
-
-if (isset($_SESSION['user_id'])) {
-
-
-
-
-    $title = '';
-    $disc = '';
-    $row = '';
-    // calling functions
-    function inotes()
-    {
-        global $title;
-        global $conn;
-        global $disc;
         if (isset($_POST['save'])) {
             $title = $_POST['title'];
             $disc = $_POST['description'];
@@ -92,13 +66,6 @@ if (isset($_SESSION['user_id'])) {
                 }
             }
         }
-    }
-
-
-    function idelete()
-    {
-
-        global $conn;
         if (isset($_GET['did'])) {
 
             $id = $_GET['did'];
@@ -108,16 +75,6 @@ if (isset($_SESSION['user_id'])) {
                 header('location:index.php');
             }
         }
-    }
-
-
-    function iupdate()
-    {
-
-        global $id;
-        global $title;
-        global $conn;
-        global $disc;
 
         if (isset($_POST['update'])) {
 
@@ -130,103 +87,102 @@ if (isset($_SESSION['user_id'])) {
                 header('location:index.php');
             }
         }
-    }
 
-?>
+        ?>
 
-    <?php
+        <?php
 
-    if (isset($_GET['eid'])) {
+        if (isset($_GET['eid'])) {
 
-        $id = $_GET['eid'];
-        $query = "SELECT * FROM `notes` WHERE id = '$id'";
-        $result = mysqli_query($conn, $query);
-        $row = mysqli_fetch_array($result);
-        $_SESSION['update'] = true;
-    ?>
+            $id = $_GET['eid'];
+            $query = "SELECT * FROM `notes` WHERE id = '$id'";
+            $result = mysqli_query($conn, $query);
+            $row = mysqli_fetch_array($result);
+            $_SESSION['update'] = true;
+        ?>
+            <div class="container my-4">
+                <h2>Add Your Note</h2>
+                <form action="index.php" method="post">
+                    <div class="form-group">
+                        <label for="title">Note title</label>
+                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                        <input type="text" value="<?php echo $row['title'] ?>" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Note Description</label>
+                        <textarea class="form-control" name="description" id="desc" rows="3" required><?php echo $row['description']; ?></textarea>
+                    </div>
+                    <button type="submit" name="update" class="btn btn-warning">Update Note</button>
+                </form>
+            </div>
+            }
+        <?php
+        } else {
+        ?>
+
+            <div class="container my-4">
+                <h2>Add Your Note</h2>
+                <form action="index.php" method="post">
+                    <div class="form-group">
+                        <label for="title">Note title</label>
+                        <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="desc">Note Description</label>
+                        <textarea class="form-control" name="description" id="desc" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" name="save" class="btn btn-primary">Add Note</button>
+                </form>
+            </div>
+
+        <?php
+        }
+
+        ?>
+
+
         <div class="container my-4">
-            <h2>Add Your Note</h2>
-            <form action="index.php" method="post">
-                <div class="form-group">
-                    <label for="title">Note title</label>
-                    <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
-                    <input type="text" value="<?php echo $row['title'] ?>" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
-                </div>
-                <div class="form-group">
-                    <label for="desc">Note Description</label>
-                    <textarea class="form-control" name="description" id="desc" rows="3" required><?php echo $row['description']; ?></textarea>
-                </div>
-                <button type="submit" name="update" class="btn btn-warning">Update Note</button>
-            </form>
-        </div>
-    <?php
-    } else {
-    ?>
 
-        <div class="container my-4">
-            <h2>Add Your Note</h2>
-            <form action="index.php" method="post">
-                <div class="form-group">
-                    <label for="title">Note title</label>
-                    <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
-                </div>
-                <div class="form-group">
-                    <label for="desc">Note Description</label>
-                    <textarea class="form-control" name="description" id="desc" rows="3" required></textarea>
-                </div>
-                <button type="submit" name="save" class="btn btn-primary">Add Note</button>
-            </form>
-        </div>
-
-    <?php
-    }
-
-    ?>
-
-
-    <div class="container my-4">
-
-        <table class="table" id="myTable">
-            <thead>
-                <tr>
-                    <th scope="col">Sr.No</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Date & Time</th>
-                    <th scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php
-                $query = "SELECT * FROM `notes`";
-                $result = mysqli_query($conn, $query);
-                $sno = 0;
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $sno = $sno + 1;
-                ?>
+            <table class="table" id="myTable">
+                <thead>
                     <tr>
-                        <th scope='row'><?php echo $sno; ?></th>
-                        <td><?php echo $row['title'] ?></td>
-                        <td><?php echo $row['description'] ?></td>
-                        <td><?php echo $row['tstamp'] ?></td>
-                        <td><a href="index.php?eid=<?php echo $row['id']; ?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="index.php?did=<?php echo $row['id']; ?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
+                        <th scope="col">Sr.No</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Date & Time</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
                     <?php
-                }
+                    $query = "SELECT * FROM `notes`";
+                    $result = mysqli_query($conn, $query);
+                    $sno = 0;
+                    while ($row = mysqli_fetch_assoc($result)) {
+                        $sno = $sno + 1;
                     ?>
-            </tbody>
-        </table>
+                        <tr>
+                            <th scope='row'><?php echo $sno; ?></th>
+                            <td><?php echo $row['title'] ?></td>
+                            <td><?php echo $row['description'] ?></td>
+                            <td><?php echo $row['tstamp'] ?></td>
+                            <td><a href="index.php?eid=<?php echo $row['id']; ?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="index.php?did=<?php echo $row['id']; ?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
+                        <?php
+                    }
+                        ?>
+                </tbody>
+            </table>
 
 
 
-    </div>
-    <hr>
+        </div>
+        <hr>
     <?php
+    }
 } else {
 
 
-?>
-
-    // Signup Login Section 
+    ?>
 
     <div class="container text-center mt-5">
         <div class="row">
