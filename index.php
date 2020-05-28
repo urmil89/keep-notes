@@ -38,7 +38,7 @@ if (!isset($_SESSION['user_id'])) {
                 $result = mysqli_query($conn, $query);
                 $id = mysqli_insert_id($conn);
                 if ($result) {
-                    $_SESSION['user_id'] = $id; 
+                    $_SESSION['user_id'] = $id;
                     $_SESSION["user_name"] = $username;
                     $_SESSION["msg"] = "Signup Successfully";
                     header('location:index.php');
@@ -212,8 +212,8 @@ if (!isset($_SESSION['user_id'])) {
     //add note php
     if (isset($_POST['save'])) {
         $user_id = $_SESSION["user_id"];
-        $title = mysqli_real_escape_string($conn,$_POST['title']);
-        $disc = mysqli_real_escape_string($conn,$_POST['description']);
+        $title = mysqli_real_escape_string($conn, $_POST['title']);
+        $disc = mysqli_real_escape_string($conn, $_POST['description']);
         if (!$title == '' || !$disc == '') {
             $query = "INSERT INTO `notes` (`id`, `title`, `description`, `tstamp`,`user_id`) VALUES (NULL, '$title', '$disc', current_timestamp(),'$user_id');";
             $result = mysqli_query($conn, $query);
@@ -240,8 +240,8 @@ if (!isset($_SESSION['user_id'])) {
 
         $user_id = $_SESSION["user_id"];
         $id = $_POST['id'];
-        $title = mysqli_real_escape_string($conn,$_POST['title']);
-        $disc = mysqli_real_escape_string($conn,$_POST['description']);
+        $title = mysqli_real_escape_string($conn, $_POST['title']);
+        $disc = mysqli_real_escape_string($conn, $_POST['description']);
         $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`=current_timestamp() WHERE id = '$id' AND `user_id` = $user_id";
         $result = mysqli_query($conn, $query);
         if ($result) {
@@ -278,28 +278,28 @@ if (!isset($_SESSION['user_id'])) {
             </form>
         </div>
     <?php
-    }else{
-       ?>
-    <div class="container my-4">
-        <h2>Add Your Note</h2>
-        <form action="index.php" method="post">
-            <div class="form-group">
-                <label for="title">Note title</label>
-                <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
-            </div>
-            <div class="form-group">
-                <label for="desc">Note Description</label>
-                <textarea class="form-control" name="description" id="desc" rows="3" required></textarea>
-            </div>
-            <button type="submit" name="save" class="btn btn-primary">Add Note</button>
-        </form>
-    </div>
+    } else {
+    ?>
+        <div class="container my-4">
+            <h2>Add Your Note</h2>
+            <form action="index.php" method="post">
+                <div class="form-group">
+                    <label for="title">Note title</label>
+                    <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" required>
+                </div>
+                <div class="form-group">
+                    <label for="desc">Note Description</label>
+                    <textarea class="form-control" name="description" id="desc" rows="3" required></textarea>
+                </div>
+                <button type="submit" name="save" class="btn btn-primary">Add Note</button>
+            </form>
+        </div>
     <?php
     }
     ?>
 
     <div class="container my-4">
-        
+
         <table class="table" id="myTable">
             <thead>
                 <tr>
@@ -318,14 +318,14 @@ if (!isset($_SESSION['user_id'])) {
                 $sno = 0;
                 while ($row = mysqli_fetch_assoc($result)) {
                     $sno = $sno + 1;
-                    ?>
+                ?>
                     <tr>
                         <th scope='row'><?php echo $sno; ?></th>
                         <td><?php echo $row['title'] ?></td>
                         <td><?php echo $row['description'] ?></td>
                         <td><?php echo $row['tstamp'] ?></td>
                         <td><a href="index.php?eid=<?php echo $row['id']; ?>"><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">Edit</button></a> <a href="index.php?did=<?php echo $row['id']; ?>"><button type="button" class="btn btn-danger">Delete</button></a></td>
-                        <?php
+                    <?php
                 }
                     ?>
             </tbody>

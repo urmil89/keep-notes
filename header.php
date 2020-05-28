@@ -46,16 +46,18 @@ session_start();
                     <a class="nav-link" href="#">contact</a>
                 </li>
             </ul>
-            
-            <?php
-					if (isset($_SESSION["user_id"])) {
-					?>
-						<li class="nav-item active">
-							<a class="nav-link" href="index.php">Welcome, <?php echo $_SESSION["user_name"]; ?></a>
-						</li>
-						<button class="btn btn-outline-success ml-3 pr-3 pl-3" type="submit" onclick="location.href='index.php?logout'">Logout</button>
-					<?php
-					}
-					?>
+            <ul class="navbar-nav">
+
+                <?php
+                if (isset($_SESSION["user_id"])) {
+                ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.php">Welcome, <?php echo $_SESSION["user_name"]; ?></a>
+                    </li>
+                    <button class="btn btn-outline-success ml-3 pr-3 pl-3" type="submit" onclick="location.href='index.php?logout'">Logout</button>
+                <?php
+                }
+                ?>
+            </ul>
         </div>
     </nav>
