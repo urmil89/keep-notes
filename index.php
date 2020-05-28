@@ -1,4 +1,5 @@
 <?php
+include 'header.php';
 
 // db connection 
 $HOSTNAME = 'localhost';
@@ -11,7 +12,6 @@ if (!$conn) {
 }
 
 
-include 'header.php';
 
 
 if (!isset($_SESSION['user_id'])) {
