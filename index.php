@@ -10,11 +10,10 @@ $conn = mysqli_connect($HOSTNAME, $USERNAME, $PASSWORD, $DATABASE);
 if (!$conn) {
     echo mysqli_error($conn) or die("connection failed.");
 }
-
 ?>
 <?php
 session_start();
-
+$user_json='';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -288,8 +287,7 @@ session_start();
             $user_id = $_SESSION["user_id"];
             $id = $_POST['id'];
             $all_users = $_POST['all_users'];
-            $user_json = json_encode($all_users);
-            $_SESSION['user_json'] = $user_json;
+            $GLOBALS[$user_json] = json_encode($all_users);
             $title = mysqli_real_escape_string($conn, $_POST['title']);
             $disc = mysqli_real_escape_string($conn, $_POST['description']);
             $query = "UPDATE `notes` SET `title`='$title',`description`='$disc',`tstamp`=current_timestamp(),`auth_user` = '$user_json' WHERE id = '$id' AND `user_id` = $user_id";
@@ -401,17 +399,18 @@ session_start();
 
         <?php
         //Check Auth User or Not
-            
-        $arr = json_decode($_SESSION['user_json'], true);
-        // print_r($arr);
-        echo $arr[0];
-        exit;
+
+        // $query = "SELECT * FROM `notes` WHERE user_id=$user_id";
+        $arr = json_decode($user_json, true);
+        print "<PRE>";
+        print_r($arr);
+        print "</PRE>";
         if ($arr[0] == $_SESSION['user_id']) {
-        ?>
-            <h1>U R Auth User</h1>
+            ?>
         <?php
         }
         ?>
+        <h1>U R Auth User</h1>
 
 
     <?php
